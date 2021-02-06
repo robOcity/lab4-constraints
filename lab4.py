@@ -54,7 +54,7 @@ def solve_constraint_dfs(problem):
             and not has_empty_domains(csp)
             and all_vars_assigned(csp)
         ):
-            solution = {var: csp.get_assignment(var) for var in csp.get_variables()}
+            solution = {var: csp.get_assignment(var) for var in csp.get_all_variables()}
             return solution, num_extensions
         elif not check_all_constraints(csp) or has_empty_domains(csp):
             continue
