@@ -1,15 +1,13 @@
 from constraint_api import *
-from test_problems import get_pokemon_problem
 from lab4 import solve_constraint_dfs
 
+# test 14
+from test_problems import triangle_problem, triangle_problem_soln
 
-# test 16
-solve_constraint_dfs_2_expected = (
-    {"Q1": "B", "Q3": "D", "Q2": "B", "Q5": "C", "Q4": "C"},
-    20,
-)
+expected = (triangle_problem_soln.assignments, 15)
 
-result = solve_constraint_dfs(get_pokemon_problem())
-print(result)
+result = solve_constraint_dfs(triangle_problem)
+print(f"actual: {result}")
+print(f"expected: {expected}")
 
 # Hint: Look at search.py, specifically the Edge and UndirectedGraph classes.  Path are lists of vertices connected by edges.  Edges have length.  Graphs have a get_edge method.  Iterate over the edges in the path and add up the lengths.  Hope this helps!
