@@ -10,7 +10,9 @@ from test_problems import get_pokemon_problem
 
 def has_empty_domains(csp):
     """Returns True if the problem has one or more empty domains, otherwise False"""
-    empty_domains = [len(csp.get_domain(v)) == 0 for v in csp.get_all_variables()]
+    empty_domains = [
+        len(csp.get_domain(v)) == 0 for v in csp.get_all_variables()
+    ]
     return any(empty_domains)
 
 
@@ -20,7 +22,8 @@ def check_all_constraints(csp):
     checked_constraints = [
         c.check(csp.get_assignment(c.var1), csp.get_assignment(c.var2))
         for c in csp.get_all_constraints()
-        if c.var1 not in csp.unassigned_vars and c.var2 not in csp.unassigned_vars
+        if c.var1 not in csp.unassigned_vars
+        and c.var2 not in csp.unassigned_vars
     ]
     return all(checked_constraints)
 
@@ -28,7 +31,7 @@ def check_all_constraints(csp):
 #### Part 2: Depth-First Constraint Solver #####################################
 
 
-def all_vars_assigned(csp):
+def has_unassigned(csp):
     """Returns True if the csp has unassigned variables."""
     assignments = [csp.get_assignment(v) for v in csp.get_all_variables()]
     return all(assignments)
@@ -54,7 +57,9 @@ def solve_constraint_dfs(problem):
             and not has_empty_domains(csp)
             and all_vars_assigned(csp)
         ):
-            solution = {var: csp.get_assignment(var) for var in csp.get_all_variables()}
+            solution = {
+                var: csp.get_assignment(var) for var in csp.get_all_variables()
+            }
             return solution, num_extensions
         elif not check_all_constraints(csp) or has_empty_domains(csp):
             continue
@@ -117,7 +122,7 @@ def domain_reduction(csp, queue=None):
     Uses constraints to reduce domains, propagating the domain reduction
     to all neighbors whose domains are reduced during the process.
     If queue is None, initializes propagation queue by adding all variables in
-    their default order. 
+    their default order.
     Returns a list of all variables that were dequeued, in the order they
     were removed from the queue.  Variables may appear in the list multiple times.
     If a domain is reduced to size 0, quits immediately and returns None.
