@@ -31,8 +31,8 @@ def check_all_constraints(csp):
 #### Part 2: Depth-First Constraint Solver #####################################
 
 
-def has_unassigned(csp):
-    """Returns True if the csp has unassigned variables."""
+def all_assigned(csp):
+    """Returns True if all the csp values are assigned."""
     assignments = [csp.get_assignment(v) for v in csp.get_all_variables()]
     return all(assignments)
 
@@ -52,23 +52,18 @@ def solve_constraint_dfs(problem):
         csp = agenda.pop()
         num_extensions += 1
 
-        if (
-            check_all_constraints(csp)
-            and not has_empty_domains(csp)
-            and has_unassigned(csp)
-        ):
+        if check_all_constraints(csp) and all_assigned(csp):
             solution = {
                 var: csp.get_assignment(var) for var in csp.get_all_variables()
             }
             return solution, num_extensions
-        elif not check_all_constraints(csp) or has_empty_domains(csp):
-            continue
 
         while unassigned_var := csp.pop_next_unassigned_var():
             for domain_val in csp.get_domain(unassigned_var):
                 new_csp = csp.copy()
                 new_csp.set_assignment(unassigned_var, domain_val)
-                agenda.append(new_csp)
+                if not has_empty_domains(new_csp):
+                    agenda.append(new_csp)
 
     return solution, num_extensions
 
