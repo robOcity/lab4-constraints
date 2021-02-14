@@ -10,9 +10,7 @@ from test_problems import get_pokemon_problem
 
 def has_empty_domains(csp):
     """Returns True if the problem has one or more empty domains, otherwise False"""
-    empty_domains = [
-        len(csp.get_domain(v)) == 0 for v in csp.get_all_variables()
-    ]
+    empty_domains = [len(csp.get_domain(v)) == 0 for v in csp.get_all_variables()]
     return any(empty_domains)
 
 
@@ -22,8 +20,7 @@ def check_all_constraints(csp):
     checked_constraints = [
         c.check(csp.get_assignment(c.var1), csp.get_assignment(c.var2))
         for c in csp.get_all_constraints()
-        if c.var1 not in csp.unassigned_vars
-        and c.var2 not in csp.unassigned_vars
+        if c.var1 not in csp.unassigned_vars and c.var2 not in csp.unassigned_vars
     ]
     return all(checked_constraints)
 
@@ -52,18 +49,17 @@ def solve_constraint_dfs(problem):
         csp = agenda.pop()
         num_extensions += 1
 
-        if check_all_constraints(csp) and all_assigned(csp):
-            solution = {
-                var: csp.get_assignment(var) for var in csp.get_all_variables()
-            }
-            return solution, num_extensions
+        if has_empty_domains(csp) or not check_all_constraints(csp):
+            continue
 
-        while unassigned_var := csp.pop_next_unassigned_var():
-            for domain_val in csp.get_domain(unassigned_var):
-                new_csp = csp.copy()
-                new_csp.set_assignment(unassigned_var, domain_val)
-                if not has_empty_domains(new_csp):
-                    agenda.append(new_csp)
+        if not csp.unassigned_vars:
+            return csp.assignments, num_extensions
+
+        unassigned_var = csp.pop_next_unassigned_var()
+        for domain_val in csp.get_domain(unassigned_var):
+            new_csp = csp.copy()
+            new_csp.set_assignment(unassigned_var, domain_val)
+            agenda.append(new_csp)
 
     return solution, num_extensions
 
